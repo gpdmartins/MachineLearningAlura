@@ -3,6 +3,11 @@ from sklearn.naive_bayes import MultinomialNB
 from collections import Counter
 from sklearn.ensemble import AdaBoostClassifier
 
+# teste inicial: home, busca, logado => comprou
+# home, busca
+# home, logado
+# busca, logado
+# busca: 85,71% (7 testes)
 
 modelo = MultinomialNB()
 df = pd.read_csv('buscas.csv')
