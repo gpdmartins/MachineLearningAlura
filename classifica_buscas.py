@@ -26,15 +26,12 @@ fim_de_teste = tamanho_treino + tamanho_teste
 treino_dados = X[:int(tamanho_treino)]
 treino_marcacoes = Y[:int(tamanho_treino)]
 
-teste_dados = X[int(tamanho_treino:int(fim_de_teste)]
-teste_marcacoes = Y[int(tamanho_treino:int(fim_de_teste)]
+teste_dados = X[int(tamanho_treino):int(fim_de_teste)]
+teste_marcacoes = Y[int(tamanho_treino):int(fim_de_teste)]
 
-validacao_dados = X[fim_de_teste:]
-validacao_marcacoes = Y[fim_de_teste:]
+validacao_dados = X[int(fim_de_teste):]
+validacao_marcacoes = Y[int(fim_de_teste):]
 
-#aula 4
-acerto_base = max(Counter(teste_marcacoes).itervalues())
-taxa_de_acerto_base = 100.0*acerto_base/len(teste_marcacoes)
 
 #aula 5
 def fit_and_predict(nome, treino_dados, treino_marcacoes, teste_dados, teste_marcacoes):
@@ -46,11 +43,37 @@ def fit_and_predict(nome, treino_dados, treino_marcacoes, teste_dados, teste_mar
     taxa_de_acerto = 100.0 * total_de_acertos / total_de_elementos
     msg = "Taxa de acerto do algoritmo {0}: {1}".format(nome, taxa_de_acerto)
     print(msg)
+    return taxa_de_acerto
+
+
 
 modelo = MultinomialNB()
-fit_and_predict("MultinomialNB", treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
+resultado_Multinomial = fit_and_predict("MultinomialNB", treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
 
 modelo = AdaBoostClassifier()
-fit_and_predict("AdaBoostClassifier", treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
+resultado_AdaBoost = fit_and_predict("AdaBoostClassifier", treino_dados, treino_marcacoes, teste_dados, teste_marcacoes)
 
-print("taxa de acerto base: %.2f%%" %(taxa_de_acerto_base))
+if resultado_Multinomial > resultado_AdaBoost:
+    vencedor = resultado_Multinomial
+else:
+    vencedor = resultado_AdaBoost
+
+def teste_real(vencedor, validacao_dados, validacao_marcacoes):
+    resultado = modelo.predict(validacao_dados)
+    acertos = resultado == validacao_marcacoes
+
+    total_de_acertos = sum(acertos)
+    total_de_elementos = len(validacao_marcacoes)
+    taxa_de_acerto = 100.0 * total_de_acertos / total_de_elementos
+    msg = "Taxa de acerto do vencedor entre os dois algoritmos no mundo real: {0}".format(taxa_de_acerto)
+    print(msg)
+
+teste_real(vencedor, validacao_dados, validacao_marcacoes)
+
+#aula 4
+acerto_base = max(Counter(validacao_marcacoes).itervalues())
+taxa_de_acerto_validacao = 100.0*acerto_base/len(validacao_marcacoes)
+print("Taxa de acerto base: %.1f%%" %(taxa_de_acerto_validacao))
+
+total_de_elementos = len(teste_dados)
+print("Total de teste: %d" %total_de_elementos)
