@@ -12,16 +12,25 @@ Xdummies_df = pd.get_dummies(X_df).astype(int)
 Ydummies_df = Y_df
 X = Xdummies_df.values
 Y = Ydummies_df.values
-porcentagem_treino = 0.9
-tamanho_treino = len(Y)*porcentagem_treino
-tamanho_teste = len(Y) - tamanho_treino
 
+
+porcentagem_treino = 0.8
+porcentagem_teste = 0.1
+
+tamanho_treino = len(Y)*porcentagem_treino
+tamanho_teste = len(Y) * porcentagem_teste
+tamanho_validacao = len(Y) - tamanho_treino - tamanho_teste
+
+fim_de_teste = tamanho_treino + tamanho_teste
 
 treino_dados = X[:int(tamanho_treino)]
 treino_marcacoes = Y[:int(tamanho_treino)]
 
-teste_dados = X[-int(tamanho_teste):]
-teste_marcacoes = Y[-int(tamanho_teste):]
+teste_dados = X[int(tamanho_treino:int(fim_de_teste)]
+teste_marcacoes = Y[int(tamanho_treino:int(fim_de_teste)]
+
+validacao_dados = X[fim_de_teste:]
+validacao_marcacoes = Y[fim_de_teste:]
 
 #aula 4
 acerto_base = max(Counter(teste_marcacoes).itervalues())
